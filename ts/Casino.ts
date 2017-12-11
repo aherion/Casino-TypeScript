@@ -29,7 +29,7 @@ class Casino {
 
             //if player does not enter Number, message to user and try again
             playerBet = Number(playerBet);
-            if (playerBet === NaN || playerBet === null || playerBet === undefined) {
+            if (isNaN(playerBet) || playerBet === null || playerBet === undefined) {
                 alert("That's not a valid bet!");
                 continue;
             }
