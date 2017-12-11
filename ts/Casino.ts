@@ -30,18 +30,18 @@ class Casino {
             //if player does not enter Number, message to user and try again
             playerBet = Number(playerBet);
             if (playerBet === NaN || playerBet === null || playerBet === undefined) {
-                alert("That's not number!");
+                alert("That's not a valid bet!");
                 continue;
             }
             let endRound = false;
             if (playerBet > playerMoney) {
-                //Break if they bet too much
-                alert("You cannot bet more than you have.");
+                //Issue reminder and reprompt if they bet too much
+                alert("You cannot bet more than you have...");
                 continue;
             }
             if (playerBet <= 0) {
-                //Break if they cheat-500
-                alert("You cannot bet zero or a negative amount!");
+                //Reminder and reprompt if they try to bet 0 or a negative amount
+                alert("You cannot make a zero or negative bet!");
                 continue;
             }
 
@@ -61,11 +61,10 @@ class Casino {
                     "\nYour hand is currently valued at: " + playerCards.cardsValue() +
                     "\nDealer Hand: " + dealerCard.toString() + " and [hidden]");
 
-                //What do they want to do
                 let response: number = 0;
                 //handle any bad response (anything that is not a 1 for hit or 2 for stay)
                 let badResponse: boolean = true;
-                while (badResponse) {
+                while (badResponse === true) {
                     response = Number(prompt("Would you like to (1)Hit or (2)Stand"));
                     if (response == 1 || response == 2)
                         badResponse = false;
@@ -118,7 +117,7 @@ class Casino {
                 alert("Push.");
                 endRound = true;
             }
-            //Determine if player wins
+            //Determine if player or dealer wins
             if ((playerCards.cardsValue() > dealerCards.cardsValue()) && !endRound) {
                 alert("You win the hand.");
                 playerMoney += playerBet;

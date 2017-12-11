@@ -11,20 +11,21 @@ class Deck {
     toString(): string {
         let deckString: string = "";
         let size: number = this.deckSize();
-        for(let i = 0; i < size; i++){
+        for (let i = 0; i < size; i++) {
             deckString += this.getCard(i).toString();
             //if there's already a card in hand then we list that AND the next card
-            if(i < size-1) deckString += " and ";
+            if (i < size - 1) deckString += " and ";
         }
         return deckString;
     }
 
     createDeck(): void {
-            for (let value = 0; value < 13; value++) {
-                for (let suit = 0; suit < 4; suit++) {
-                    this.cards.unshift(new Card(suit, value));
-                }
+        for (let value = 0; value < 13; value++) {
+            for (let suit = 0; suit < 4; suit++) {
+                //unshift allows adding elements (cards) to front of array
+                this.cards.unshift(new Card(suit, value));
             }
+        }
     }
 
     shuffle(): void {
@@ -35,21 +36,22 @@ class Deck {
         let originalSize = this.cards.length;
         for (let i = 0; i < originalSize; i++) {
             let currentSize = this.cards.length;
-            //gen random num according to int randomNum = rand.nextInt((max - min) + 1) + min;
-            //get a random card and recurse on failure (b/c for some unknown reason, as of now, there are fandom undefined
+            //define function to generate a random card by setting a randomCardIndex (rounded) and setting card at that index to randomCard
+            //also recurse on failure (b/c for some unknown reason, as of now, there are random undefined
             //cards making it into the deck
             let randomCard: Card;
-            let getRandomCard = function(deck:Deck) {
+            let getRandomCard = function (deck: Deck) {
                 randomCardIndex = Math.round(Math.random() * (currentSize - 1));
                 let randomCard = deck.cards[randomCardIndex];
                 if (randomCard === undefined) return getRandomCard(deck);
                 return randomCard;
-            }
-             randomCard = getRandomCard(this);
+            };
+            //randomCard established by performing getRandomCard function defined above
+            randomCard = getRandomCard(this);
 
-            //throw random card into new deck
+            //throw random card into top of new deck
             tmpDeck.unshift(randomCard);
-            //remove picked from old deck
+            //remove picked card from old deck and decrement count of that deck
             this.cards.splice(randomCardIndex, 1);
         }
         //set this.deck to our newly shuffled deck
@@ -73,9 +75,9 @@ class Deck {
 
 //Draw a top card from deck
     public draw(comingFrom: Deck): void {
-        //Add card to this deck from whatever deck its coming from
+        //Add card to this deck from other deck
         this.addCard(comingFrom.getCard(0));
-        //Remove the card in the deck its coming from
+        //Remove the card in other deck
         comingFrom.removeCard(0);
     }
 
@@ -97,15 +99,18 @@ class Deck {
 
     //Calculate the value of deck
     public cardsValue(): number {
-        let totalValue: any = 0;
-        let aces: any = 0;
+        let totalValue: number = 0;
+        let aces: number = 0;
         let aCard: Card;
         //For every card in the deck
         for (let index in this.cards) {
             aCard = this.cards[index];
-            if(aCard === undefined || aCard === null) continue;
+            if (aCard === undefined || aCard === null) continue;
             //Switch of possible values
             switch (aCard.value) {
+                case 0:
+                    aces += 1;
+                    break;
                 case 1:
                     totalValue += 2;
                     break;
@@ -142,16 +147,12 @@ class Deck {
                 case 12:
                     totalValue += 10;
                     break;
-                case 0:
-                    aces += 1;
-                    break;
             }
         }
 
         //Determine the total current value with aces
-        //Aces worth 11 or 1 - if 11 would go over 21 make it worth 1
+        //Aces worth 11 or 1 if 11 would put the hand over 21
         for (let i = 0; i < aces; i++) {
-            //If they're already at over 10 getting an ace valued at 11 would put them up to 22, so make ace worth one
             if (totalValue > 10) {
                 totalValue += 1;
             }
